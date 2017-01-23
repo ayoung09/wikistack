@@ -18,11 +18,15 @@ const db = new Sequelize('postgres://localhost:5432/wikistack_db', {logging: fal
 var Page = db.define('page', {
     title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
     },
     urlTitle: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        route: () => {
+            var title = this.title;
+            return '/wiki/' + title;
+        }
     },
     content: {
         type: Sequelize.TEXT,
@@ -34,6 +38,16 @@ var Page = db.define('page', {
     date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
+    }
+  }, {
+        hooks: {
+            beforeValidate: function(page) {
+            if (page.title) {
+                page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+            } else {
+                page.urlTitle = page.title = Math.random().toString(36).substring(2,7);
+            }
+        }
     }
 });
 
