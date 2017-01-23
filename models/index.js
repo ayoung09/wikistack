@@ -23,17 +23,23 @@ var Page = db.define('page', {
     urlTitle: {
         type: Sequelize.STRING,
         allowNull: false,
-        route: () => {
-            var title = this.title;
-            return '/wiki/' + title;
-        }
+        // route: function() {
+        //     var title = this.title;
+        //     return '/wiki/' + title;
+        // }
     },
+
     content: {
         type: Sequelize.TEXT,
         allowNull: false
     },
     status: {
         type: Sequelize.ENUM('open', 'closed')
+    },
+    date: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+
     },
     createdAt: {
         type: Sequelize.DATE,
@@ -52,6 +58,11 @@ var Page = db.define('page', {
           } else {
               page.urlTitle = page.title = Math.random().toString(36).substring(2, 7);
           }
+      }
+  },
+  getterMethods: {
+      route: function (){
+          return '/wiki/' + this.urlTitle;
       }
   }
 });

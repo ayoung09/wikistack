@@ -5,10 +5,21 @@ const Page = models.Page;
 const User = models.User;
 
 
+
 wikiRouter.get('/',function(req, res, next){
-  res.redirect('/');
+  Page.findAll({
+    where: {status: 'open'}
+  }).then(function(allPages){
+   // console.log(allPages)
+    res.render('index', {allPages: allPages})
+    }).catch(next);
+
 });
 
+
+wikiRouter.get('/add', function(req, res, next){
+   res.render('addpage');
+});
 wikiRouter.post('/', function(req, res, next){
   let title = req.body.title,
   content = req.body.content;
@@ -16,15 +27,29 @@ wikiRouter.post('/', function(req, res, next){
   var page = Page.build({
     title: title,
     content: content,
+    status: 'open'
   });
 
-  page.save()
-  .then(res.json(req.body));
-});
+var newPage = page.save();
+//console.log(this);
+  newPage.then(function(savedPage){
+    res.redirect(savedPage.urlTitle);
+  }
+    //console.log('this is this', this),
+).catch(next);
+})
 
-wikiRouter.get('/add', function(req, res, next){
-   res.render('addpage');
-});
+
+
+wikiRouter.get('/:urlTitle', function(req,res,next){
+  Page.findOne({
+    where : {urlTitle : req.params.urlTitle}
+  }).then(function(foundPage){
+    //console.log(foundPage)
+    res.render('wikipage', foundPage.dataValues);
+  }).catch(next);
+
+})
 
 wikiRouter.get('/')
 
