@@ -35,20 +35,25 @@ var Page = db.define('page', {
     status: {
         type: Sequelize.ENUM('open', 'closed')
     },
-    date: {
+    createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+    },
+    updatedAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
     }
   }, {
-        hooks: {
-            beforeValidate: function(page) {
-            if (page.title) {
-                page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
-            } else {
-                page.urlTitle = page.title = Math.random().toString(36).substring(2,7);
-            }
-        }
-    }
+
+    hooks: {
+        beforeValidate: function(page) {
+        if (page.title) {
+              page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+          } else {
+              page.urlTitle = page.title = Math.random().toString(36).substring(2, 7);
+          }
+      }
+  }
 });
 
 var User = db.define('user', {

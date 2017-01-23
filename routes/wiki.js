@@ -3,7 +3,6 @@ const wikiRouter= express.Router();
 const models = require('../models');
 const Page = models.Page;
 const User = models.User;
-const Sequelize = require('sequelize');
 
 
 wikiRouter.get('/',function(req, res, next){
@@ -11,12 +10,12 @@ wikiRouter.get('/',function(req, res, next){
 });
 
 wikiRouter.post('/', function(req, res, next){
-  //res.json(req.body);
+  let title = req.body.title,
+  content = req.body.content;
 
   var page = Page.build({
-    title: req.body.title,
-    content: req.body.content,
-    //date: Sequelize.NOW
+    title: title,
+    content: content,
   });
 
   page.save()
