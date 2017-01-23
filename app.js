@@ -21,11 +21,12 @@ models.User.sync({})
 })
 .catch(console.error);
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('Welcome to Wikistack');
 });
-
 
 app.set('view engine', 'html');
 
