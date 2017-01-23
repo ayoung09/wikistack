@@ -5,11 +5,13 @@ const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const env = nunjucks.configure('views', {noCache: true});
 const models = require('./models');
+const wikiRouter = require('./routes/wiki');
 // const server = app.listen('3000', () => {
 //   console.log('Listening on 3000');
 // })
 
-
+app.use(express.static('public'));
+app.set('view engine', 'html');
 models.User.sync({})
 .then(() => {
   return models.Page.sync({});
@@ -23,15 +25,13 @@ models.User.sync({})
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use('/wiki/', wikiRouter);
 
-app.get('/', (req, res) => {
-  res.send('Welcome to Wikistack');
-});
 
-app.set('view engine', 'html');
+//app.set('view engine', 'html');
 
 app.engine('html', nunjucks.render);
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
 
 
